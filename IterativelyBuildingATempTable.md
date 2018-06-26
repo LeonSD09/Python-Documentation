@@ -3,6 +3,7 @@
 
 #### IMPORTANT NOTE ####
 _As this particular documentation was written with my colleagues at work, and I work at Apple, and Apple is very much about privacy, references to potentially sensitive information have been omitted_ 😎
+-----
 
 I was trying to run a query in Teradata (TD) over a given date range but it kept timing out on me. My solution to this problem was to build a temp table and load the data I needed in chunks. Unfortunately, both my query and the INSERT statement I was using to load the table only worked on one day at a time. 😓
 
