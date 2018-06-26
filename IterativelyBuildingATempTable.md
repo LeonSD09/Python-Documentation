@@ -1,5 +1,5 @@
 #### IMPORTANT NOTE
-_As this particular documentation was written for my colleagues at work, and since I work at Apple, and Apple is very much about privacy, references to potentially sensitive information have been omitted_ 😎
+_As this particular documentation was written for my colleagues at work, and since I work at Apple, and Apple is very much about secrecy, references to potentially sensitive information have been omitted_ 😎
 
 # Iteratively Building a Teradata Temp Table w/ Python
 
