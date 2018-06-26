@@ -16,7 +16,7 @@ import aos_td
 import time
 ```
 
-Pandas has a nifty function that you can give a start and end date to and it will generate the range for you. I used it to just sequentially build out 4 consecutive days but it can do [some other pretty cool things](http://pandas.pydata.org/pandas-docs/stable/timeseries.html#generating-ranges-of-timestamps). The last line in the block below is a fancy *list comprehension* that just takes the Pandas object it creates and converts it into a list that I can iterate through, putting the dates in the YYYY-MM-DD format that TD likes.
+Pandas has a nifty function that you can give a start and end date to and it will generate the range for you. I used it to just sequentially build out 4 consecutive days but it can do [some other pretty cool things](http://pandas.pydata.org/pandas-docs/stable/timeseries.html#generating-ranges-of-timestamps). The last line in the block below is a fancy *list comprehension* that just takes the Pandas object it creates and converts it into a list that I can iterate through, putting the dates in the ```YYYY-MM-DD``` format that TD likes.
 
 ```
 start = date(2016,8,17)
@@ -24,7 +24,7 @@ end = date(2016,8,20)
 dts = [d.strftime('%Y-%m-%d') for d in pd.date_range(start, end)]
 ```
 
-The query is held in a string with a parameter *$[dt] *used in the date filter. This value will be replaced when the query is actually run in the next block of code.
+The query is held in a string with a parameter ```$[dt]``` used in the date filter. This value will be replaced when the query is actually run in the next block of code.
 
 ``` sql
 query = """
@@ -32,7 +32,7 @@ query = """
 """
 ```
 
-Finally, I iterated through the dates in my date list (*dts*), building my INSERT statement with the correct date and loading the data into my temp table. I added a little status message just so I can monitor the progress as I ate lunch. I also through in some timing code (*s1/e1/s2/e2...*) just for profiling the speed of the script and query.
+Finally, I iterated through the dates in my date list (```dts```), building my INSERT statement with the correct date and loading the data into my temp table. I added a little status message just so I can monitor the progress as I ate lunch. I also through in some timing code (```s1/e1/s2/e2...```) just for profiling the speed of the script and query.
 
 ``` python
 s1 = time.time()
@@ -52,7 +52,7 @@ print '-----------------------------------------------------'
 print "Total Time Elapsed: " + str(round(e1 - s1, 1)) + 's'
 ```
 
-Below is what my terminal window looked like as it worked for me:
+Below is what my terminal window looked like as it built out my table:
 
 ```
 Inserted: 2016-08-17         Time Elapsed: 125.7s
@@ -63,4 +63,4 @@ Inserted: 2016-08-20         Time Elapsed: 139.7s
 Total Time Elapsed: 552.8s
 ```
 
-Almost 10 minutes to build out four days - probably faster than I could have done it manually. 🤓
+Almost 10 minutes to build out four days - definitely faster than I could have done it manually. 🤓
