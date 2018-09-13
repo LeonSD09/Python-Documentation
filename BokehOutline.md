@@ -1,7 +1,7 @@
 # Bokeh Outline
 
-* GitHub PR: < link to be inserted by author >
-* Preview Link: < link to be inserted by author >
+* GitHub PR: https://github.com/LeonSD09/Python-Documentation/blob/master/BokehOutline.md
+* Preview Link: https://github.com/LeonSD09/Python-Documentation/blob/master/BokehOutline.md
 
 ## Who is this article for?
 (todo)
