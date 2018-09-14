@@ -10,7 +10,7 @@ Pythonistas...
 - ...who want to create visualizations that can be integrated into a web-based application
 
 ## How will it benefit them?
-
+Using a plotting library like Bokeh opens up a host of new data visualization possibilities. While it touts its capabilities around interactivity, it is a powerful tool in creating easily customizable and aesthetically pleasing data visualizations. By being based in Javascript and HTML, the resulting visualizations can easily be implemented anywhere from Jupyter Notebooks to web applications. With that said, it is equally useful if you just need a professional-looking visualization for a presentation or report.  
 
 ## What will they be able to do at the end of the article?
 - Feel comfortable using the Bokeh library to go from data to visualization
@@ -24,21 +24,21 @@ Pythonistas...
 
 ## Outline / Main Sections
 * What is Bokeh?
- * Introduction 
- * Bokeh vs. Other Popular Visualization Libraries
+  * Introduction 
+  * Bokeh vs. Other Popular Visualization Libraries
 * The figure() Object
 * Basic Plotting
- * Integrating data
- * Plotting with Glyphs
- * Scatter Plots
- * Line Plots
- * Bar and Column Charts
+  * Integrating data
+  * Plotting with Glyphs
+  * Scatter Plots
+  * Line Plots
+  * Bar and Column Charts
  * Pie Charts
 * Configuring Layouts
- * Rows, Columns, and Gridlots
- * Tabbed Layouts
+  * Rows, Columns, and Gridlots
+  * Tabbed Layouts
 * Adding Interaction
- * Selection
- * Hover and Tooltips
- * Linking
- * Interactive Legends
+  * Selection
+  * Hover and Tooltips
+  * Linking
+  * Interactive Legends
