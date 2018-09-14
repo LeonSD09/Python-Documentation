@@ -198,7 +198,7 @@ The graph below shows the blob in the upper right selected using the `box_select
 
 ### Hover
 
-Similar to Selection, there are tools that facilitate hover interaction - specifically `[HoverTool](https://bokeh.pydata.org/en/latest/docs/user_guide/tools.html#hovertool)`.
+Similar to Selection, there are tools that facilitate hover interaction - specifically [HoverTool](https://bokeh.pydata.org/en/latest/docs/user_guide/tools.html#hovertool).
 
 ```
 import numpy as np
@@ -247,7 +247,7 @@ show(plot)
 ![Hover Tooltip](HoverTooltip.gif) 
 
 
-Additionally the `**$**` character is reserved for built-in parameters that can be passed to `tooltips`. The [`HoverTool` documentation](https://bokeh.pydata.org/en/latest/docs/user_guide/tools.html#hovertool) has more information.
+Additionally the `$` character is reserved for built-in parameters that can be passed to `tooltips`. The [`HoverTool` documentation](https://bokeh.pydata.org/en/latest/docs/user_guide/tools.html#hovertool) has more information.
 
 ## Categorical Colormaps
 
@@ -560,13 +560,13 @@ p1 = figure(plot_height=400, plot_width=400, title='Click legend to **HIDE** dat
 p1.circle(dfDA['W'], dfDA['X'], legend='data analyst', alpha=0.5)
 p1.square(dfDS['W'], dfDS['X'], legend='data_scientist', alpha=0.5)
 p1.legend.location = 'top_left'
-**p1.legend.click_policy="hide"**
+p1.legend.click_policy="hide"
 
 p2 = figure(plot_height=400, plot_width=400, title='Click legend to **MUTE** data')
 p2.circle(dfDA['W'], dfDA['X'], legend='data analyst', alpha=0.5, **muted_alpha****=0.2**)
 p2.square(dfDS['W'], dfDS['X'], legend='data_scientist', alpha=0.5, **muted_alpha****=0.2**)
 p2.legend.location = 'top_left'
-**p2.legend.click_policy="mute"**
+p2.legend.click_policy="mute"
 
 layout = row(p1, p2)
 show(layout)

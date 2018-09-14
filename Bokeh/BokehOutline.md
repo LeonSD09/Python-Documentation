@@ -1,6 +1,7 @@
 # Bokeh Outline
 
-* GitHub PR: https://github.com/LeonSD09/Python-Documentation/blob/master/BokehOutline.md
+* GitHub PR: https://github.com/LeonSD09/Python-Documentation/blob/master/Bokeh/BokehOutline.md
+* Preview: _The following is a draft I began preparing for my coworkers. The outline below is based on this draft, and I imagine the final version for RealPython would be a more polished, refactored version loosely based off the draft._ https://github.com/LeonSD09/Python-Documentation/blob/master/Bokeh/BokehTutorial_WorkDraft.md
 
 ## Who is this article for?
 Pythonistas...
