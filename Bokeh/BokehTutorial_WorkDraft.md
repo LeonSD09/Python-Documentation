@@ -33,7 +33,7 @@ reset_output()
 ```
 
 A simple chart can be made by creating a `Figure` and then drawing representations on it with ***glyphs***. Glyphs are visual shapes - ie. circles, squares, asterisks, lines, etc. [The Bokeh `Figure` object contains numerous glyph options](https://bokeh.pydata.org/en/latest/docs/reference/plotting.html):
-[Glyph List](Glyphs.png) A very simple chart creation may look like something below. The `circle()` method is given two lists - one containing x-coordinates, one containing y-coordinates. The circles are rendered on the `Figure()` object `plot`, written to *circles.html* and then opened in a web browser via `show(plot)`. 
+![Glyph List](./Glyphs.png) A very simple chart creation may look like something below. The `circle()` method is given two lists - one containing x-coordinates, one containing y-coordinates. The circles are rendered on the `Figure()` object `plot`, written to *circles.html* and then opened in a web browser via `show(plot)`. 
 
 ```
 # Very simple chart example
@@ -44,7 +44,7 @@ output_file('circles.html')
 show(plot)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/JebN0Ob_mXKsUM74UPJvOA]Similar to `circle()`, other glyphs can be added as markers. The cope snippet above draws additional glyphs at coordinates represented by `square()` and `x()` glyphs. 
+![Circles](Circles.png) Similar to `circle()`, other glyphs can be added as markers. The cope snippet above draws additional glyphs at coordinates represented by `square()` and `x()` glyphs. 
 
 ```
 plot.square(x=[2,4,6,8], y=[2,4,6,8])
