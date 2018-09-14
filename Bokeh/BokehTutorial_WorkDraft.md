@@ -33,7 +33,10 @@ reset_output()
 ```
 
 A simple chart can be made by creating a `Figure` and then drawing representations on it with ***glyphs***. Glyphs are visual shapes - ie. circles, squares, asterisks, lines, etc. [The Bokeh `Figure` object contains numerous glyph options](https://bokeh.pydata.org/en/latest/docs/reference/plotting.html):
-![Glyph List](./Glyphs.png) A very simple chart creation may look like something below. The `circle()` method is given two lists - one containing x-coordinates, one containing y-coordinates. The circles are rendered on the `Figure()` object `plot`, written to *circles.html* and then opened in a web browser via `show(plot)`. 
+
+![Glyph List](Glyphs.png) 
+
+A very simple chart creation may look like something below. The `circle()` method is given two lists - one containing x-coordinates, one containing y-coordinates. The circles are rendered on the `Figure()` object `plot`, written to *circles.html* and then opened in a web browser via `show(plot)`. 
 
 ```
 # Very simple chart example
@@ -44,7 +47,9 @@ output_file('circles.html')
 show(plot)
 ```
 
-![Circles](Circles.png) Similar to `circle()`, other glyphs can be added as markers. The cope snippet above draws additional glyphs at coordinates represented by `square()` and `x()` glyphs. 
+![Circles Example](Circles.png) 
+
+Similar to `circle()`, other glyphs can be added as markers. The cope snippet above draws additional glyphs at coordinates represented by `square()` and `x()` glyphs. 
 
 ```
 plot.square(x=[2,4,6,8], y=[2,4,6,8])
@@ -53,7 +58,9 @@ output_file('circle_square_x.html')
 show(plot)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/hXToP9LI9GCwfxiIulbg-Q]The various glyph methods have attribute parameters, common examples being:
+![Squares Example](Squares.png) 
+
+The various glyph methods have attribute parameters, common examples being:
 
 * **size**: a number between 0 and 100, 100 being the size of the figure
 * **color**: color values in hex strinks, RGB tuples between 0 and 255, of any of the [147 CSS color names](http://www.colors.commutercreative.com/grid/)
@@ -68,7 +75,9 @@ output_file('size_color_alpha.html')
 show(sca)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/ZyRRub-5PPCQ2JsI9gwtVw]To connect markers with lines, use the line glyph.
+![Glyph Attributes](GlyphAttributes.png) 
+
+To connect markers with lines, use the line glyph.
 
 ```
 linefig = figure(plot_width=400, plot_height=400)
@@ -77,7 +86,9 @@ output_file('lines.html')
 show(linefig)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/3BObpW23C4lXVYweSKlmig]Custom geometric shapes can be drawn using the `patches()` glyph function. This method takes as input a list of lists containing numeric values specifying the vertices in the x- and y-dimensions. 
+![Line Example](Line.png) 
+
+Custom geometric shapes can be drawn using the `patches()` glyph function. This method takes as input a list of lists containing numeric values specifying the vertices in the x- and y-dimensions. 
 
 ```
 patchfig = figure()
@@ -88,7 +99,7 @@ output_file('patches.html')
 show(patchfig)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/-wWxBWozyoBc_GXOX8DLGQ]All of the examples above used python `lists` for simplification. Additionally, `numpy` arrays and `pandas` DataFrame columns can also be used as input.
+![Patches Example](Patches'.png) All of the examples above used python `lists` for simplification. Additionally, `numpy` arrays and `pandas` DataFrame columns can also be used as input.
 
 ```
 import numpy as np
@@ -100,7 +111,8 @@ output_file('numpy_sin.html')
 show(plot)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/XMqJWIAnlD-TzlGxiRsQeg]
+![Dashed Line Example](DashedLine.png) 
+
 ```
 import pandas as pd
 df = pd.DataFrame([[1,1,'red', 10], [2,2,'pink',12], [3,3,'purple',14], [4,4,'orange',16]], columns=['x','y','color','size'])
@@ -110,7 +122,9 @@ output_file('pandas_dataframe.html')
 show(plot)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/SoQjwMoBPTeVv4orVjoymg]Bokeh also has a built-in object called a `ColumnDataSource` which is used to map a python data object to JavaScript. This table-like data object maps string column names to sequences (columns) of data. `ColumnDataSource` object enforces that all columns are the same length. It can also be shared between different plots. ([**Bokeh documentation**](https://bokeh.pydata.org/en/latest/docs/user_guide/data.html#columndatasource))
+![X's Example](Xs.png) 
+
+Bokeh also has a built-in object called a `ColumnDataSource` which is used to map a python data object to JavaScript. This table-like data object maps string column names to sequences (columns) of data. `ColumnDataSource` object enforces that all columns are the same length. It can also be shared between different plots. ([**Bokeh documentation**](https://bokeh.pydata.org/en/latest/docs/user_guide/data.html#columndatasource))
 
 The example below takes the DataFrame from above and uses it is the input to a `ColumnDataSource` object. Notice how the elements of the DataFrame are then referenced.
 
@@ -123,7 +137,9 @@ output_file('column_data_source_from_df.html')
 show(plot)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/U1GlKJPWnbsJqnmPONDq0w]
+![X's Example - Column Data Source](DashedLine_CDS.png) 
+
+
 ## The `figure()` Object
 
 In all the examples above, a `figure()` object was built before adding information to the visualization. In some of the examples, the parameters `plot_width` and `plot_height` were used to specify the width and height, respectively, of the figure in pixels. However, there are a host of other attributes that can be specified here as well.
@@ -154,7 +170,9 @@ plot = figure(x_axis_label='X Label',
 show(plot)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/mQknNxGkHYHSnyfcKW2J3w]
+![figure() Object](FigureObject.png) 
+
+
 ## Basic Selection and Hover
 
 Bokeh sets itself apart by supporting interactive visualization through the use of JavaScript and HTML. Two simple implementations of interaction are:
@@ -176,7 +194,8 @@ show(plot)
 
 The graph below shows the blob in the upper right selected using the `box_select` tool. Additionally, the lasso_select and poly_select tools were added to the figure. All of these tool options were found on [this page](https://bokeh.pydata.org/en/latest/docs/user_guide/tools.html).
 
-[Image: file:///-/blob/OSK9AAZGueH/OCHSxKfia9DaNXsZ-EiS-A]
+![Selection](Selection.gif) 
+
 ### Hover
 
 Similar to Selection, there are tools that facilitate hover interaction - specifically `[HoverTool](https://bokeh.pydata.org/en/latest/docs/user_guide/tools.html#hovertool)`.
@@ -197,7 +216,9 @@ plot.circle(x, y, size=10,
 show(plot)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/q9ZmeyOd3AlIUEPcBTyxNA]
+![Hover](Hover.gif) 
+
+
 ### Hover Tooltips
 
 The functionality above can be extended by passing information to the  `tooltips` parameter in the creation of the `HoverTool` object. The important thing to remember is that variables can be passed to the tooltip by using the `**@**` sign.
@@ -223,7 +244,9 @@ plot.circle('x', 'y', source=cds, size=20)
 show(plot)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/MN5oP6Svk96JfUYLMsrYvw]
+![Hover Tooltip](HoverTooltip.gif) 
+
+
 Additionally the `**$**` character is reserved for built-in parameters that can be passed to `tooltips`. The [`HoverTool` documentation](https://bokeh.pydata.org/en/latest/docs/user_guide/tools.html#hovertool) has more information.
 
 ## Categorical Colormaps
@@ -262,7 +285,8 @@ plot.square('X', 'Y', source=source,
 show(plot)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/NS0V_xQCrjiLFi0pC7JKNA]
+![Categorical Colormap](Blobs.png) 
+
 ## Configuring Layouts
 
 plots and controls can be arranges visually on a page in
@@ -312,8 +336,9 @@ layout = row(column(p1, p2), p3)
 show(layout)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/WyanTcrD7X1mYjwqpcBLTA]
-### gridplots
+![Rows and Columns](RowColumn.png) 
+
+### Gridplots
 
 Alternatively to `row` and `column`, you can use a `gridplot` object (think `subplot` from `matplotlib`).
 
@@ -355,7 +380,8 @@ layout = gridplot([p1, p3], [p2, None])
 show(layout)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/RJSY_PQ5a37tMjs18BCxVw]
+![Gridplot](GridPlot.png) 
+
 ### Tabbed Layouts
 
 Bokeh makes it super-easy to separate plots on individual tabs. Doing so requires two Bokeh widgets - `Tab` and `Panel`.
@@ -399,7 +425,9 @@ tabs = Tabs(tabs=[panel1, panel2, panel3])
 show(tabs)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/f3EPBN5nm01_UlKo8ZgO0A]Note that the *child* parameter passed to the `Panel` object also accepts other layout objects (`row`, `column`, `gridplot`), etc.
+![Tabbed Layout](TabbedLayout.gif) 
+
+Note that the *child* parameter passed to the `Panel` object also accepts other layout objects (`row`, `column`, `gridplot`), etc.
 
 ## Linking Plots Together
 
@@ -442,7 +470,8 @@ p1.y_range = p2.y_range = p3.y_range
 show(layout)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/9kwkQhGdAJddMBR-_ZDpiQ]
+![Linked Axes](LinkedAxes.gif) 
+
 ### Linking Selections
 
 Using `ColumnDataSource` enables easy setup of linked selection - where selecting information on one plot will select and highlight connected information on a different plot. 
@@ -472,7 +501,8 @@ layout = gridplot([[p1, p2]], toolbar_location='left')
 show(layout)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/BaqJSzPjyiDNp2iliQAqFQ]
+![Linked Selections](LinkedSelection.gif) 
+
 ## Legends
 
 The example above could definitely use a legend. This can be added inside the glyph method - the `circle()` method in the above case. More information about legends can be found [here](https://bokeh.pydata.org/en/latest/docs/user_guide/annotations.html#legends).
@@ -502,7 +532,8 @@ p1.legend.location = 'top_left'
 show(p1)
 ```
 
-[Image: file:///-/blob/OSK9AAZGueH/DTezndx6ehgFcZtqzuRoHQ]
+![Basic Legend](Legend.png) 
+
 ### Interactive
 
 Adding interactive to functions is done similarly to how the position was specified above. Two options are to hide and mute upon clicking an element of the legend. Documentation on interactive legends can be found [here](https://bokeh.pydata.org/en/latest/docs/user_guide/interaction/legends.html#userguide-interaction-legends). 
@@ -542,4 +573,5 @@ show(layout)
 ```
 
 *Note the passing of the `muted_alpha` parameter when `legend.click_policy=”mute”`*
-[Image: file:///-/blob/OSK9AAZGueH/l5z5j9bs_rgSUpNzjVz9Cg]
+
+![Interactive Legend](HideMuteLegend.gif) 
