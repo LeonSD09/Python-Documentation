@@ -19,7 +19,6 @@ Using a plotting library like Bokeh opens up a host of new data visualization po
 
 ## Title ideas:
 * Interactive Data Visualization with Bokeh
-* Bokeh Basics, Bokeh 101 
 * Getting Started with Bokeh for Data Visualization
 
 ## Outline / Main Sections
