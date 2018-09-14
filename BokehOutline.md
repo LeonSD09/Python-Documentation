@@ -1,7 +1,6 @@
 # Bokeh Outline
 
 * GitHub PR: https://github.com/LeonSD09/Python-Documentation/blob/master/BokehOutline.md
-* Preview Link: https://github.com/LeonSD09/Python-Documentation/blob/master/BokehOutline.md
 
 ## Who is this article for?
 Pythonistas...
