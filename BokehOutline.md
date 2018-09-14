@@ -4,21 +4,41 @@
 * Preview Link: https://github.com/LeonSD09/Python-Documentation/blob/master/BokehOutline.md
 
 ## Who is this article for?
-(todo)
+Pythonistas...
+- ...looking for an alternative data visualization tool to ```matplotlib```, ```seaborn```, etc.
+- ...with a need for for an added layer of interactivity in their data visualizations
+- ...who want to create visualizations that can be integrated into a web-based application
 
 ## How will it benefit them?
-(todo)
+
 
 ## What will they be able to do at the end of the article?
-(todo)
+- Feel comfortable using the Bokeh library to go from data to visualization
+- Create common charts, configure layouts, and customize styles of figures
+- Implement multiple forms of chart interactivity 
 
 ## Title ideas:
-* Title suggestion #1
-* Title suggestion #2
+* Interactive Data Visualization with Bokeh
+* Bokeh Basics, Bokeh 101 
+* Getting Started with Bokeh for Data Visualization
 
 ## Outline / Main Sections
-* Top level section 1
-  * Sub section
-  * Sub section
-* Top level section 2
-* Top level section 2
+* What is Bokeh?
+ * Introduction 
+ * Bokeh vs. Other Popular Visualization Libraries
+* The figure() Object
+* Basic Plotting
+ * Integrating data
+ * Plotting with Glyphs
+ * Scatter Plots
+ * Line Plots
+ * Bar and Column Charts
+ * Pie Charts
+* Configuring Layouts
+ * Rows, Columns, and Gridlots
+ * Tabbed Layouts
+* Adding Interaction
+ * Selection
+ * Hover and Tooltips
+ * Linking
+ * Interactive Legends
