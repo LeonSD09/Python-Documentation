@@ -30,10 +30,7 @@ Using a plotting library like Bokeh opens up a host of new data visualization po
 * Basic Plotting
   * Integrating data
   * Plotting with Glyphs
-  * Scatter Plots
-  * Line Plots
-  * Bar and Column Charts
- * Pie Charts
+  * Scatters, Lines, Bars, and Pies
 * Configuring Layouts
   * Rows, Columns, and Gridlots
   * Tabbed Layouts
