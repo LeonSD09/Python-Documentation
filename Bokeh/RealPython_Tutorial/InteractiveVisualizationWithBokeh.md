@@ -102,7 +102,7 @@ fig = figure()
 show(fig)
 ```
 
-![output_file](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/output_file_example.png) 
+![output_file](./assets/output_file_example.png) 
 
 As you can see, a new browser window opened with a tab called _Empty Bokeh Figure_ and an empty figure. Not shown is the file generated with the name _output_file_test.html_. This is based on the parameters passed to ```output_file()```.
 
@@ -123,9 +123,11 @@ fig = figure()
 show(fig)
 ```
 
-![](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/output_notebook_example.png)
+![](./assets/output_notebook_example.png)
 
-Same result, just rendered in a different location. More information about both ```output_file()``` and ```output_notebook()``` can be found in [the Bokeh official docs](https://bokeh.pydata.org/en/latest/docs/reference/io.html#bokeh-io-output).
+Same result, just rendered in a different location. 
+
+More information about both ```output_file()``` and ```output_notebook()``` can be found in [the Bokeh official docs](https://bokeh.pydata.org/en/latest/docs/reference/io.html#bokeh-io-output).
 
 ----
 
@@ -186,7 +188,7 @@ fig = figure(
 show(fig)
 ```
 
-![](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/example_figure.png)
+![](./assets/example_figure.png)
 
 Once the ```figure()``` object is instantiated, you can still configure it after the fact. 
 
@@ -200,11 +202,11 @@ fig.grid.grid_line_color = None
 fig.show()
 ```
 
-![](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/example_figure_no_gridlines.png)
+![](./assets/example_figure_no_gridlines.png)
 
 With so many customizable elements, If you are working in a Notebook or in an IDE with auto-complete - this feature is your friend! Otherwise, doing a quick web search with the keyword _bokeh_ and what you are trying to do will generally point you in the right direction. 
 
-![](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/auto_complete.gif)
+![](./assets/auto_complete.gif)
 
 There is tons more I could touch on here, but don't feel like you're missing out. I'll make sure to introduce different figure tweaks as the tutorial progresses. Still worried? Check out [the excellent Bokeh User Guide](https://bokeh.pydata.org/en/latest/docs/user_guide/styling.html#text-properties) or go straight to the source:
 
@@ -222,7 +224,7 @@ Additionally, here are a few specific customization tools worth checking out:
 
 Now the fun really begins. But before we jump in, it is probably a good call out to remind you that Bokeh visualizations - unlike those created  ```matplotlib``` and ```seaborn``` - are not ready-made versions of the charts you are used to seeing. That brings us to glyphs, the building blocks of Bokeh visualizations. Glyph is essentially a fancy word for shape, and after you create your figure you are given access to [a bevy of these configurable shapes](https://bokeh.pydata.org/en/latest/docs/reference/plotting.html) to create the visualization of your dreams:
 
-![Glyph options as seen in the Bokeh Reference Guide](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/glyph_options.png)
+![Glyph options as seen in the Bokeh Reference Guide](./assets/glyph_options.png)
 
 Now this may sound scary, building everything from scratch, but you will be surprised with the freedom it opens up in making not only the usual charts and graphs but also truly unique and elegant data visualizations.
 
@@ -263,7 +265,7 @@ fig.circle(
 show(fig)
 ```
 
-![](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/first_glyphs.png)
+![](./assets/first_glyphs.png)
 
 Notice that I hid the toolbar by setting the ```toolbar_location``` property to ```None``` in the figure instantiation. 
 
@@ -323,7 +325,7 @@ fig.legend.location = 'top_left'
 show(fig)
 ```
 
-![multi_glyph_example](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/multi_glyph_example.png)
+![multi_glyph_example](./assets/multi_glyph_example.png)
 
 Instead of using explicit color names as in previous examples, this time I took advantage of glyphs being able to interpret [hex color values](https://htmlcolorcodes.com). Also, this is the first time I've shown you how seamlessly a legend can be created by simply setting the ```legend``` property for each glyph. The legend was then moved to the upper left corner of the plot. Much more [detail about styling legends can be found here](https://bokeh.pydata.org/en/latest/docs/user_guide/styling.html#legends). Clifferhanger: they will show up again later in the tutorial when we start digging into interactive elements of the visualization. 
 
@@ -375,7 +377,7 @@ westTop2 = standings[(standings['teamAbbr'] == 'HOU') | (standings['teamAbbr'] =
 westTop2.head()
 ```
 
-![westTop2_preview](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/westTop2_preview.png)
+![westTop2_preview](./assets/westTop2_preview.png)
 
 From here I can load this ```DataFrame``` into a ```ColumnDataSource``` and visualize the race:
 
@@ -414,7 +416,7 @@ fig.legend.location = "top_left"
 show(fig)
 ```
 
-![rockets_v_warriors](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/rockets_v_warriors.png)
+![rockets_v_warriors](./assets/rockets_v_warriors.png)
 
 I like it! It was definitely a tight race throughout the season, with the Warriors building a pretty big cushion around the middle of the season. However a bit of a late-season slide allowed the Rockets to catch up and ultimately surpass the defending champs to finish the season as the Western Conference number-one seed. 
 
@@ -464,7 +466,7 @@ westFig.legend.location = "top_left"
 show(westFig)
 ```
 
-![rockets_v_warriors_v2](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/rockets_v_warriors_v2.png)
+![rockets_v_warriors_v2](./assets/rockets_v_warriors_v2.png)
 
 Different approach, same result. Where in the first example I created two ```ColumnDataSource``` objects, one each with a slice of the ```westTop2``` ```DataFrame```. I actually could have just done that slice with the ```ColumnDataSource``` as illustrated above. 
 
@@ -526,7 +528,7 @@ eastFig.legend.location = "top_left"
 show(eastFig)
 ```
 
-![celtics_v_raptors](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/celtics_v_raptors.png)Not too shabby. The ```ColumnDataSource``` was able to isolate the relevant data within  a 5,040-by-39 ```DataFrame``` without breaking a sweat, saving me a few lines of ```pandas``` code in the process. And what do you know, the Eastern Conference race was no slouch. After the Celtics roared out of the gate, the Raptors clawed all the way back to overtake their division rival and finish the regular season with five more wins. Okay, now that I have my two visualizations it is time to put them together. 
+![celtics_v_raptors](./assets/celtics_v_raptors.png)Not too shabby. The ```ColumnDataSource``` was able to isolate the relevant data within  a 5,040-by-39 ```DataFrame``` without breaking a sweat, saving me a few lines of ```pandas``` code in the process. And what do you know, the Eastern Conference race was no slouch. After the Celtics roared out of the gate, the Raptors clawed all the way back to overtake their division rival and finish the regular season with five more wins. Okay, now that I have my two visualizations it is time to put them together. 
 
 For those familiar with the ```matplotlib``` ```subplot``` paradigm, Bokeh offers the ```colum()```, ```row()```, and ```gridplot()``` functions in its ```bokeh.layouts module```.
 
@@ -540,7 +542,7 @@ from bokeh.layouts import column
 show(column(eastFig, westFig))
 ```
 
-![column_layout](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/column_layout.png)
+![column_layout](./assets/column_layout.png)
 
 I'll save you the two lines of code, but rest assured swapping ```column``` for ```row``` in the snippet above will similarly configure the two plots in a row-wise configuration. 
 
@@ -566,7 +568,7 @@ westFig.title.text = 'Western Conference'
 show(gridplot([[eastFig, westFig]]))
 ```
 
-![image-20180930194509029](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/gridplot_layout.png)
+![image-20180930194509029](./assets/gridplot_layout.png)
 
 Lastly on ```gridplot()``` it does allow the passing of ```None``` values, which are interpreted as blank spaces. Therefore if I wanted to leave a placeholder for two additional plots I could use:
 
@@ -575,19 +577,42 @@ Lastly on ```gridplot()``` it does allow the passing of ```None``` values, which
 show(gridplot([[eastFig, None], [None, westFig]]))
 ```
 
-![image-20180930194804872](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/gridplot_with_nones.png)
+![image-20180930194804872](./assets/gridplot_with_nones.png)
+
+Pretty cool, but I think I'd rather view both visualizations at their full size without having to squash them down to fit next to or on top of each other. Plus, I can do the above in ```matplotlib``` pretty easily. So it is time to use something that sets Bokeh apart - tabbed layouts. 
+
+A tabbed layour consists of two Bokeh widget functions - ```Tab()``` and ```Panel()``` from the ```bokeh.models.widgets``` sub-module. As in using ```gridplot()```, making a tabbed layout is similarly straightforward:
+
+```python
+# Bokeh Library
+from bokeh.models.widgets import Tabs, Panel
+
+# Increase the plot widths
+eastFig.plot_width = 800
+westFig.plot_width = 800
+
+# Create two panels, one for each conference
+eastPanel = Panel(child=eastFig, title='Eastern Conference')
+westPanel = Panel(child=westFig, title='Western Conference')
+
+# Assign the panels to tabs
+tabs = Tabs(tabs=[eastPanel, westPanel])
+
+# Show the tabbed layout
+show(tabs)
+```
+
+![tabbed_layout](./assets/tabbed_layout.gif)
+
+
+
+
 
 
 
 ## Adding Interaction
 
-### Selection
-
-### Hover and Tooltips
-
-### Linking
-
-### Legends
+### 
 
 
 
