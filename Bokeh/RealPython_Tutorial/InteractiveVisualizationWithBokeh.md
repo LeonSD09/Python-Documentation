@@ -1,4 +1,4 @@
-Getting Started with Interactive Data Visualization Using Bokeh
+# Getting Started with Interactive Data Visualization Using Bokeh
 
 Bokeh prides itself on being a library for _interactive_ data visualization. Unlike popular counterparts in the Python visualization space like ```matplotlib``` and ```seaborn```, Bokeh renders its graphics using HTML and Javascript. While this makes it a great candidate for building web-based dashboards and applications, it is an equally powerful tool for exploring and undersanding your data or creating beautiful custom charts for a project or report.  
 
@@ -530,7 +530,7 @@ show(eastFig)
 
 ![celtics_v_raptors](./assets/celtics_v_raptors.png)Not too shabby. The ```ColumnDataSource``` was able to isolate the relevant data within  a 5,040-by-39 ```DataFrame``` without breaking a sweat, saving me a few lines of ```pandas``` code in the process. And what do you know, the Eastern Conference race was no slouch. After the Celtics roared out of the gate, the Raptors clawed all the way back to overtake their division rival and finish the regular season with five more wins. Okay, now that I have my two visualizations it is time to put them together. 
 
-For those familiar with the ```matplotlib``` ```subplot``` paradigm, Bokeh offers the ```colum()```, ```row()```, and ```gridplot()``` functions in its ```bokeh.layouts module```.
+For those familiar with the ```matplotlib``` ```subplot``` paradigm, Bokeh offers the ```colum()```, ```row()```, and ```gridplot()``` functions in its ```bokeh.layouts module```. These functions can more generally be classified as _layouts_, the same I may call a plot a visualization. 
 
 The usage is very straightforward. If I want to put my two visualizations in a column-wise configuration I can do so with:
 
@@ -595,7 +595,7 @@ westFig.plot_width = 800
 eastPanel = Panel(child=eastFig, title='Eastern Conference')
 westPanel = Panel(child=westFig, title='Western Conference')
 
-# Assign the panels to tabs
+# Assign the panels to Tabs
 tabs = Tabs(tabs=[eastPanel, westPanel])
 
 # Show the tabbed layout
@@ -604,9 +604,11 @@ show(tabs)
 
 ![tabbed_layout](./assets/tabbed_layout.gif)
 
+The first step is to create a ```Panel()``` for each tab. I realize that sounds a little confusing, but think of the ```Tabs()``` function as the mechanism that organizes the individual tabs created with ```Panel()```. 
 
+Each ```Panel()``` takes as input a child, which can either be a single ```figure()``` or a layout (recall a layout is a general name for a ```colum()```, ```row()```, or ```gridplot()``` ). Once your panels are assembled, they can be passed as input to ```Tabs()``` in a list.  
 
-
+So now that you understand how to access, draw, and organize your data it is time to move on to the real magic of Bokeh - interaction! As always, check out [Bokeh's user guide](https://bokeh.pydata.org/en/latest/docs/user_guide/layout.html). 
 
 
 
