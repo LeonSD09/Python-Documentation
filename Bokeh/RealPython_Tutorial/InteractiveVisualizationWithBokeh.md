@@ -784,12 +784,227 @@ To further explore the capabilities of the ```HoverTool()```, check out [HoverTo
 
 
 
+**Linking**
+
+Linking is the process of syncing elements of different visualizations within a layout. For instance, maybe I want to link the axes of multiple plots to ensure that if I zoom in on one it is reflected on another. Let's see how it is done. 
+
+For this example, I want to create a visualization that allows me to zoom into different segments of a team's schedule and examine various game stats. Each stat will be reprented by its own plot in a two-by-two ```gridplot()``` . 
+
+I will be focusing on my favorite team, the Philadelphia 76ers, and I've gathered the data I want to visualize in a ```DataFrame``` named ```phiGameStats```:
+
+```
+# Preview the data
+phiGameStats.head(10)
+```
+
+![image-20181001091314235](./assets/phiGmStats_preview.png)
+
+Here is the code, and then I'll highlight some points of emphasis:
+
+```python
+# Bokeh Libraries
+from bokeh.plotting import figure, show
+from bokeh.io import output_notebook
+from bokeh.models import ColumnDataSource, CategoricalColorMapper, Div
+from bokeh.layouts import gridplot, column
+
+# Output inline in the notebook
+output_notebook()
+
+# Store the data in a ColumnDataSource
+gameStats = ColumnDataSource(phiGameStats)
+
+# Create a CategoricalColorMapper that assigns specific colors to wins and losses
+winLossMapper = CategoricalColorMapper(factors = ['W', 'L'], palette=['Green', 'Red'])
+
+# Specify the tools
+toolList = ['xpan', 'reset', 'save']
+
+# Create a figure and column chart for each stat category
+ptsFig = figure(y_axis_label='Points', plot_height=200, plot_width=400, x_range=(1,10), tools=toolList)
+ptsFig.vbar(x='gmNum', top='teamPTS', source=gameStats, width=0.9, color=dict(field='winLoss', transform=winLossMapper))
+
+astFig = figure(y_axis_label='Assists', plot_height=200, plot_width=400, x_range=(1,10), tools=toolList)
+astFig.vbar(x='gmNum', top='teamAST', source=gameStats, width=0.9, color=dict(field='winLoss', transform=winLossMapper))
+
+rebFig = figure(x_axis_label='Game Number', y_axis_label='Rebounds', plot_height=200, plot_width=400, x_range=(1,10), tools=toolList)
+rebFig.vbar(x='gmNum', top='teamTRB', source=gameStats, width=0.9, color=dict(field='winLoss', transform=winLossMapper))
+
+tovFig = figure(x_axis_label='Game Number', y_axis_label='Turnovers', plot_height=200, plot_width=400, x_range=(1,10), tools=toolList)
+tovFig.vbar(x='gmNum', top='teamTO', source=gameStats, width=0.9, color=dict(field='winLoss', transform=winLossMapper))
+
+# Create layout
+grid = gridplot([[ptsFig, astFig], [rebFig, tovFig]])
+
+# Link together the x-axes
+ptsFig.x_range = astFig.x_range = rebFig.x_range = tovFig.x_range
+
+# Add a title for the entire visualization using Div 
+html = """<h3>Philadelphia 76ers Game Log</h3>
+<b><i>2017-18 Regular Season</i>
+<br>
+</b><i>Wins in green, losses in red</i>
+"""
+supTitle = Div(text=html)
+
+# Visualize
+show(column(supTitle,grid))
+```
+
+Okay, lots of new things going on - I'll start from the top:
+
+* I want to be able to clearly tell which games were wins versus losses. With that in mind I've used a ```CategoricalColorMapper``` to map a color to the respective values of the ```winLoss``` column of my ```ColumnDataSource```
+* The initial view will only show the first 10 games of the 76ers' season, and I want to be able to pan horizontally throughout the season. Thus I specified for the toolbar to have an ```xpan``` tool to allow me to pan the plots without having to worry about accidentally skewing the view along the vertical axis.
+* The ```CategoricalColorMapper``` is implemented upon the creation of the glyph as seen above
+* Observe how simple it is to link the axes. To implement the syncing of the x-axes across the four plots, all I have to do is set the ```x_range``` of their respective figures to each other. That's it! 
+* Lastly, a little bit of a trick. I want to add a title bar to the visualization. I could have tried to do this on the ```ptsFig``` but it would have been limited to the space of that figure. In the example, I used Bokeh's ability to interpret HTML to insert  a ```Div``` element that contains my title information. Once that is created, I simply combine that with my ```gridplot()``` in a ```column()``` layout. 
+
+So here is what all that actually looks like:
+
+![](./assets/linked_axes.gif)
 
 
 
+Similarly, I can easily implement linked selections - where a selection on one plot will be reflected on others. 
+
+To show you how this works, I am going to create a visualization with two scatter plots - one that shows the 76ers' two-point versus three-point field goal percentage on a game-by-game basis, the other showing the 76ers' team points versus opponent points on a game-by-game basis. I want to be able to select data points on the left side scatter plot and quickly be able to recognize if the corresponding datapoint on the right scatter plot is a win or loss. I've created a new ```DataFrame``` for this example called ```phiGameStats2```:
+
+```
+# Preview data
+phiGameStats2.head(5)
+```
+
+![image-20181001100344996](./assets/phiGameStats2_preview.png)
+
+Here is the code first, and then I'll take you through what's happening:
+
+```python
+# Bokeh Libraries
+from bokeh.plotting import figure, show
+from bokeh.io import output_notebook
+from bokeh.models import ColumnDataSource, CategoricalColorMapper, NumeralTickFormatter
+from bokeh.layouts import gridplot
+
+# Output inline in the notebook
+output_notebook()
+
+# Store the data in a ColumnDataSource
+gameStats = ColumnDataSource(phiGameStats2)
+
+# Create a CategoricalColorMapper that assigns specific colors to wins and losses
+winLossMapper = CategoricalColorMapper(factors = ['W', 'L'], palette=['Green', 'Red'])
+
+# Specify the tools
+toolList = ['lasso_select', 'tap', 'reset', 'save']
+
+# Create a figure relating the percentages
+pctFig = figure(title='2PT FG % vs 3PT FG %, 2017-18 Regular Season', 
+                plot_height=400, plot_width=400, tools=toolList,
+                x_axis_label='2PT FG%', y_axis_label='3PT FG%')
+pctFig.circle(x='team2P%', y='team3P%', source=gameStats, size=12, color='black')
+
+# Format the y-axis tick labels as percenages
+pctFig.xaxis[0].formatter = NumeralTickFormatter(format="00.0%")
+pctFig.yaxis[0].formatter = NumeralTickFormatter(format="00.0%")
+
+# Create a figure relating the totals
+totFig = figure(title='Team Points vs Opponent Points, 2017-18 Regular Season', 
+                plot_height=400, plot_width=400, tools=toolList, 
+                x_axis_label='Team Points', y_axis_label='Opponent Points')
+totFig.square(x='teamPTS', y='opptPTS', source=gameStats, size=10,
+         color=dict(field='winLoss', transform=winLossMapper))
 
 
+# Create layout
+grid = gridplot([[pctFig, totFig]])
+
+# Visualize
+show(grid)
+```
+
+So looks pretty typical. One new trick I added for this example is formatting the axes using a ```NumericalTickFormatter```. Otherwise, it doesn't seem like I needed to add anything special to implement the linked selection. 
+
+This is a great example of the power in using a ```ColumnDataSource```. Without having to add any extra code, Bokeh already knows the relationship between the datapoints on the respective scatter plots. Therefore when I use any of the selection tools made available, the connection is ready to respond. Here's how it looks in action:
+
+ ![linked_selection](./assets/linked_selection.gif)
+
+Pretty cool! By selecting a random sample of datapoints in the upper right quadrant of the left scatter plot - those corresponding to both high two-point and three-point field goal percentage - the corresponding datapoints on the right scatter plot are highlighted. I'm able to quickly confirm my intuition, shooting higher percentages from both two-point and three-point range is associated with more wins - as all but two of the games selected were wins.  
+
+All the details on linking plots can be found at [Linking Plots](https://bokeh.pydata.org/en/latest/docs/user_guide/interaction/linking.html) in the Bokeh User Guide.
+
+
+
+**Interactive Legends**
+
+And that brings us to the final interactivity example in this tutorial - interactive legends. 
+
+I showed you in the ***Using the ColumnDataSource Object*** section how easy it is to implement a legend when creating your plot. With the legend in place, it is extremely easy to add interactivity by assigning a ```click_policy```. Using a single line of code, you can quickly add the ability to either **hide** or **mute** data using the legend.
+
+Here's an example:
+
+```python
+# Bokeh Libraries
+from bokeh.plotting import figure, show
+from bokeh.io import output_notebook
+from bokeh.models import ColumnDataSource, CDSView, GroupFilter
+from bokeh.layouts import row
+
+# Output inline in the notebook
+output_notebook()
+
+# Store the data in a ColumnDataSource
+playerGmStats = ColumnDataSource(playerStats)
+
+# Create a view each for 
+# LeBron James
+lebronFilters = [GroupFilter(column_name='playFNm', group='LeBron'), 
+                 GroupFilter(column_name='playLNm', group='James')]
+lebronView = CDSView(source=playerGmStats,filters=lebronFilters)
+# and Kevin Durant
+durantFilters = [GroupFilter(column_name='playFNm', group='Kevin'), 
+                 GroupFilter(column_name='playLNm', group='Durant')]
+durantView = CDSView(source=playerGmStats,filters=durantFilters)
+
+# Create a scatter plot called hideFig that compares the players' game-by-game points and rebounds
+hideFig = figure(title='Click Legend to HIDE Data', plot_width=400, 
+                 x_axis_label='Points', y_axis_label='Rebounds', toolbar_location=None)
+hideFig.circle(x='playPTS', y='playTRB', source=playerGmStats, view=lebronView, 
+               size=12, alpha=0.7, color='#002859', legend='LeBron James')
+hideFig.circle(x='playPTS', y='playTRB', source=playerGmStats, view=durantView, 
+               size=12, alpha=0.7, color='#FFC324', legend='Kevin Durant')
+
+# Replicate scatter plot as muteFig
+muteFig = figure(title='Click Legend to MUTE Data', plot_width=400, 
+                 x_axis_label='Points', toolbar_location=None)
+muteFig.circle(x='playPTS', y='playTRB', source=playerGmStats, view=lebronView, 
+               size=12, alpha=0.7, color='#002859', legend='LeBron James',
+               muted_alpha=0.1)
+muteFig.circle(x='playPTS', y='playTRB', source=playerGmStats, view=durantView, 
+               size=12, alpha=0.7, color='#FFC324', legend='Kevin Durant',
+               muted_alpha=0.1)
+
+# Add interactivity to the legend
+hideFig.legend.click_policy='hide'
+muteFig.legend.click_policy='mute'
+
+# Visualize
+show(row(hideFig, muteFig))
+```
+
+![interactive_legend](./assets/interactive_legend.gif)
+
+There you have it. Once the legend is place, all you have to do is assign either ```'hide'``` or ```'mute'``` to the figure's ```legend.click_policy``` proerty. This will automatically turn your basic legend into an interactive legend. 
+
+Also note that specifically for ```'mute'``` the additional property of ```'muted_alpha'``` was set in the respective ``circle()`` glyphs for LeBron James and Kevin Durant. 
+
+For more on on all things interaction in Bokeh, [Adding Interactions](https://bokeh.pydata.org/en/latest/docs/user_guide/interaction.html) in the Bokeh User Guide is a great place to start. 
 
 
 
 ## Summary and Next Steps
+
+We made it to the end of the tutorial - what a journey! 
+
+You should now have a great set of tools to turn your data into beautiful interactive visualizations with Bokeh. To quickly recap what I touched on:
+
+* 
