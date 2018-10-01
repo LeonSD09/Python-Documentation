@@ -1,4 +1,4 @@
-# Getting Started with Interactive Data Visualization Using Bokeh
+Getting Started with Interactive Data Visualization Using Bokeh
 
 Bokeh prides itself on being a library for _interactive_ data visualization. Unlike popular counterparts in the Python visualization space like ```matplotlib``` and ```seaborn```, Bokeh renders its graphics using HTML and Javascript. While this makes it a great candidate for building web-based dashboards and applications, it is an equally powerful tool for exploring and undersanding your data or creating beautiful custom charts for a project or report.  
 
@@ -327,33 +327,255 @@ show(fig)
 
 Instead of using explicit color names as in previous examples, this time I took advantage of glyphs being able to interpret [hex color values](https://htmlcolorcodes.com). Also, this is the first time I've shown you how seamlessly a legend can be created by simply setting the ```legend``` property for each glyph. The legend was then moved to the upper left corner of the plot. Much more [detail about styling legends can be found here](https://bokeh.pydata.org/en/latest/docs/user_guide/styling.html#legends). Clifferhanger: they will show up again later in the tutorial when we start digging into interactive elements of the visualization. 
 
-You are ready to get your hands on some real data. The examples above used Python lists and Numpy arrays to represent the data and Bokeh is well equipped to handle these objects. However when it comes to data in Python you are most likely to come across Python dictionaries and Pandas DataFrames - especially if you are reading in data from a file or external data source. As you can imagine, Bokeh is well equipped to work with these more complex data structures and even has built-in functionality to handle them. For this tutorial I will focus on the most fundamental - the **```ColumnDataSource```**.
-
-
-
 ## A Quick Aside About Data
 
-Anytime you are exploring a new visualization library, it is a good idea to start with some data for which you already have a sense of how you intend to express it visually. The beauty of a package as flexible as Bokeh is that nearly any idea you have should be possible, its just a matter of how you want to leverage the avaialble tools to do so. 
+Anytime you are exploring a new visualization library, it is a good idea to start with some data for which you have a sense of how you intend to express it visually. The beauty of a package as flexible as Bokeh is that nearly any idea you have should be possible, its just a matter of how you want to leverage the avaialble tools to do so. 
 
-With that said, as I take you through filling out the template above I will be using a subset of a publically-available datasets from Kaggle that has information about [the National Basketball Association's (NBA) 2017-18 season](https://www.kaggle.com/pablote/nba-enhanced-stats). I will be hopping around between three datasets - one that holds game-by-game snapshots of player statistics, one that holds game-by-game snapshots of team statistics, and one that holds daily team standings and rankings. 
+With that said, as I take you through filling out the template above I will be using a subset of a publically-available data from Kaggle that has information about [the National Basketball Association's (NBA) 2017-18 season](https://www.kaggle.com/pablote/nba-enhanced-stats). I will be hopping around between three datasets - one that holds game-by-game snapshots of player statistics, one that holds game-by-game snapshots of team statistics, and one that holds daily team standings and rankings. 
 
-This data has nothing to do with what I do for work, but I love basketball and am always thinking about ways to visualize the ever-growing amount of data associated with it. If you don't have data to play with from school or work, think about something you are interested in and try to find some data for that. It will go a long way in making both the learning and creative processes more enjoyable! 
+This data has nothing to do with what I do for work, but I love basketball and am always thinking about ways to visualize the ever-growing amount of data associated with it. If you don't have data to play with from school or work, think about something you are interested in and try to find some data for that. It will go a long way in making both the learning and creative process more enjoyable! 
 
 
 
 ## Using the ColumnDataSource Object
 
+You are ready to get your hands on some real data. The examples above used Python lists and Numpy arrays to represent the data and Bokeh is well equipped to handle these objects. However when it comes to data in Python you are most likely to come across Python dictionaries and Pandas DataFrames, especially if you are reading in data from a file or external data source. As you can imagine, Bokeh is well equipped to work with these more complex data structures and even has built-in functionality to handle them - particularly the ```ColumnDataSource```.
+
+So the first question you may have is - _why use a ```ColumnDataSource``` when Bokeh can interface with other data types directly?_ For one, whether you reference a list, array, dictionary, or DataFrame directly when building your visualization, Bokeh is going to turn it into a ```ColumnDataSource``` behind the scenes anway. More importantly, as you'll see ```ColumnDataSource``` make it much easier to implement the Bokeh's interactive affordances. ****
+
+The ```ColumnDataSource``` is foundational in passing the data to the glyphs you are using to visualize. It's primary functionality is to map names to the arrays within your data. This makes it easier for you to reference elements of your data when building your visualization, and easier for Bokeh to to the same when building your vizualization. 
+
+```ColumnDataSource``` can be passed three forms of data as input parameters:
+
+* **Python ```dict```** where the keys are names associated with the respective value sequences (ie. lists, arrays, etc.)
+* **Pandas ```DataFrame```** where the columns of the ```DataFrame``` become the reference names for the ```ColumnDataSource```
+* **Pandas ```groupby```** where the columns of the ```ColumnDataSource``` reference the columns as seen by calling ```groupby.describe()```
 
 
 
+I want to visualize the race for first place in the NBA's Western Conference in 2017-18 between the defending-champion Golden State Warriors and the challenger Houston Rockets. I have stored the daily win-loss records of these two teams in a ```DataFrame``` named ```westTop2```:
+
+```Python
+# Data Handling Libraries
+import pandas as pd
+import numpy as np
+
+# Read in the standings dataset
+standings = pd.read_csv('2017-18_standings.csv')
+
+# Convert stDate column to datetime
+standings['stDate'] = pd.to_datetime(standings['stDate'])
+
+# Isolate the daily win totals for the Warriors and Rockets
+westTop2 = standings[(standings['teamAbbr'] == 'HOU') | (standings['teamAbbr'] == 'GS')]\
+           .loc[:,['stDate', 'teamAbbr', 'gameWon']]\
+           .sort_values(['teamAbbr','stDate'])
+      
+# Preview the DataFrame
+westTop2.head()
+```
+
+![westTop2_preview](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/westTop2_preview.png)
+
+From here I can load this ```DataFrame``` into a ```ColumnDataSource``` and visualize the race:
+
+```python
+# Bokeh libraries
+from bokeh.plotting import figure, show
+from bokeh.io import output_notebook
+from bokeh.models import ColumnDataSource
+
+# Output inline in the notebook
+output_notebook()
+
+# Create a ColumnDataSource 
+rockets = ColumnDataSource(westTop2[westTop2['teamAbbr'] == 'HOU'])
+warriors = ColumnDataSource(westTop2[westTop2['teamAbbr'] == 'GS'])
+
+# Create and configure the figure
+fig = figure(x_axis_type="datetime", 
+             plot_height=300,
+             plot_width=600,
+             title="Western Conference Top 2 Teams Wins Race, 2017-18",
+             toolbar_location=None)
+
+# Add axis labels
+fig.xaxis.axis_label = 'Date'
+fig.yaxis.axis_label = 'Wins'
+
+# Render the race as step lines
+fig.step('stDate', 'gameWon', color='#CC0000', legend='Rockets', source=rockets)
+fig.step('stDate', 'gameWon', color='#223E91', legend='Warriors', source=warriors)
+
+# Move the legend to the upper left corner
+fig.legend.location = "top_left"
+
+# Show the plot
+show(fig)
+```
+
+![rockets_v_warriors](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/rockets_v_warriors.png)
+
+I like it! It was definitely a tight race throughout the season, with the Warriors building a pretty big cushion around the middle of the season. However a bit of a late-season slide allowed the Rockets to catch up and ultimately surpass the defending champs to finish the season as the Western Conference number-one seed. 
+
+Notice how the respective ```ColumnDataSource``` objects are referenced when creating the two lines. I simplied passed the original column names as input parameters and specified which ```ColumnDataSource``` to use via the ```source``` property. 
+
+```ColumnDataSource``` objects can do more than just serve as easy way to reference ```DataFrame``` columns. To illustrate another functionality of the ```ColumnDataSource```, I am going to make a small tweak to the code snippet above:
+
+```python
+# Bokeh libraries
+from bokeh.plotting import figure, show
+from bokeh.io import output_notebook
+from bokeh.models import ColumnDataSource, CDSView, GroupFilter
+
+# Output inline in the notebook
+output_notebook()
+
+# Create a ColumnDataSource 
+cds = ColumnDataSource(westTop2)
+
+# Create views for each team
+rocketsView = CDSView(source=cds, 
+                      filters=[GroupFilter(column_name='teamAbbr', group='HOU')])
+warriorsView = CDSView(source=cds, 
+                      filters=[GroupFilter(column_name='teamAbbr', group='GS')])
+
+# Create and configure the figure
+westFig = figure(x_axis_type="datetime", 
+                 plot_height=300,
+                 plot_width=600,
+                 title="Western Conference Top 2 Teams Wins Race, 2017-18",
+                 toolbar_location=None)
+
+# Add axis labels
+westFig.xaxis.axis_label = 'Date'
+westFig.yaxis.axis_label = 'Wins'
+
+# Render the race as step lines
+westFig.step('stDate', 'gameWon', color='#CC0000', legend='Rockets', 
+             source=cds, view=rocketsView)
+westFig.step('stDate', 'gameWon', color='#223E91', legend='Warriors', 
+             source=cds, view=warriorsView)
+
+# Move the legend to the upper left corner
+westFig.legend.location = "top_left"
+
+# Show the plot
+show(westFig)
+```
+
+![rockets_v_warriors_v2](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/rockets_v_warriors_v2.png)
+
+Different approach, same result. Where in the first example I created two ```ColumnDataSource``` objects, one each with a slice of the ```westTop2``` ```DataFrame```. I actually could have just done that slice with the ```ColumnDataSource``` as illustrated above. 
+
+The ```ColumnDataSource``` object has three built in filters which can be used to create views on your data using a ```CDSView``` object:
+
+* ```GroupFilter``` allows you to select rows from a ```ColumnDataSource``` given a categorical reference value
+* ```IndexFilter``` allows you to select rows from a ```ColumnDataSource``` via a list of integer indices
+* ```BooleanFilter``` allows you to select rows from a ```ColumnDataSource``` using a list of ```boolean``` values, with ```True``` rows being selected
+
+Well the Western Conference sure was an exciting race, but I forget if the Eastern Conference was the same. I sort of want to view them in a single visualization. A perfect segway to the next topic - layouts. 
+
+If you are still craving more, there is plenty more to chew on related to the  ```ColumnDataSource``` and other source objects offered through Bokeh [here](https://bokeh.pydata.org/en/latest/docs/user_guide/data.html). 
 
 
 
-## Configuring Layouts
+## Organizing Multiple Visualizations with Layouts
 
-### Rows, Columns, and Gridplots
+The Eastern Conference standings came down to two rivals in the Atlantic Division - the Boston Celtics and the Toronto Raptors. Before I replicate the steps used to create ```westTop2```, I want to try to put the ```ColumnDataSource``` to the test one more time using what you learned above. Can I feed it the entire ```standings``` ```DataFrame``` and then create views for the two teams straight from that?
 
-### Tabbed Layouts
+```python
+# Bokeh libraries
+from bokeh.plotting import figure, show
+from bokeh.io import output_notebook
+from bokeh.models import ColumnDataSource, CDSView, GroupFilter
+
+# Output inline in the notebook
+output_notebook()
+
+# Create a ColumnDataSource 
+cds = ColumnDataSource(standings)
+
+# Create views for each team
+celticsView = CDSView(source=cds, 
+                      filters=[GroupFilter(column_name='teamAbbr', group='BOS')])
+raptorsView = CDSView(source=cds, 
+                      filters=[GroupFilter(column_name='teamAbbr', group='TOR')])
+
+# Create and configure the figure
+eastFig = figure(x_axis_type="datetime", 
+             plot_height=300,
+             plot_width=600,
+             title="Eastern Conference Top 2 Teams Wins Race, 2017-18",
+             toolbar_location=None)
+
+# Add axis labels
+eastFig.xaxis.axis_label = 'Date'
+eastFig.yaxis.axis_label = 'Wins'
+
+# Render the race as step lines
+eastFig.step('stDate', 'gameWon', color='#00611B', legend='Celtics', 
+             source=cds, view=celticsView)
+eastFig.step('stDate', 'gameWon', color='#D50F44', legend='Raptors', 
+             source=cds, view=raptorsView)
+
+# Move the legend to the upper left corner
+eastFig.legend.location = "top_left"
+
+# Show the plot
+show(eastFig)
+```
+
+![celtics_v_raptors](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/celtics_v_raptors.png)Not too shabby. The ```ColumnDataSource``` was able to isolate the relevant data within  a 5,040-by-39 ```DataFrame``` without breaking a sweat, saving me a few lines of ```pandas``` code in the process. And what do you know, the Eastern Conference race was no slouch. After the Celtics roared out of the gate, the Raptors clawed all the way back to overtake their division rival and finish the regular season with five more wins. Okay, now that I have my two visualizations it is time to put them together. 
+
+For those familiar with the ```matplotlib``` ```subplot``` paradigm, Bokeh offers the ```colum()```, ```row()```, and ```gridplot()``` functions in its ```bokeh.layouts module```.
+
+The usage is very straightforward. If I want to put my two visualizations in a column-wise configuration I can do so with:
+
+```python
+# Bokeh library
+from bokeh.layouts import column
+
+# Plot the two visualizations in a column-wise configuration
+show(column(eastFig, westFig))
+```
+
+![column_layout](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/column_layout.png)
+
+I'll save you the two lines of code, but rest assured swapping ```column``` for ```row``` in the snippet above will similarly configure the two plots in a row-wise configuration. 
+
+The two visualizations above do not have a toolbar, but if they did each figure would have its own. That is one of the main reasons to use ```gridplot()``` instead of either ```row()``` or ```column()```. Syntactically ```gridplot()``` also is slighlty different in that instead of being passed a tuple as input it requires a list of lists, where each list represents a row in the grid:
+
+```python
+# Bokeh library
+from bokeh.layouts import gridplot
+
+# Add a toolbar to both figures
+eastFig.toolbar_location = 'right'
+westFig.toolbar_location = 'right'
+
+# Reduce the width of both figures
+eastFig.plot_width = 300
+westFig.plot_width = 300
+
+# Edit the titles
+eastFig.title.text = 'Eastern Conference'
+westFig.title.text = 'Western Conference'
+
+# Plot the two visualizations in a row-wise configuration
+show(gridplot([[eastFig, westFig]]))
+```
+
+![image-20180930194509029](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/gridplot_layout.png)
+
+Lastly on ```gridplot()``` it does allow the passing of ```None``` values, which are interpreted as blank spaces. Therefore if I wanted to leave a placeholder for two additional plots I could use:
+
+```
+# Plot the two visualizations with placeholders
+show(gridplot([[eastFig, None], [None, westFig]]))
+```
+
+![image-20180930194804872](/Users/lsdangio/Desktop/Python/Python-Documentation/Bokeh/RealPython_Tutorial/assets/gridplot_with_nones.png)
 
 
 
