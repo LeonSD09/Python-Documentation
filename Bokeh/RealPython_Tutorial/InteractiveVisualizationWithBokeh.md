@@ -1007,4 +1007,16 @@ We made it to the end of the tutorial - what a journey!
 
 You should now have a great set of tools to turn your data into beautiful interactive visualizations with Bokeh. To quickly recap what I touched on:
 
-* 
+* A general template for crafting your visualization in Bokeh
+* Configuring your script to output to either a static HTML file or Jupyter Notebook
+* How to instantiate and configure the ```figure()``` object
+* Building your visualization idea from scratch using glyphs
+* Accessing your data via Bokeh's ```ColumnDataSource``` object
+* Organizing multiple plots in grid and tabbed layouts
+* Adding different forms of interaction, including selections, hover actions, linking, and interactive legends
+
+And there is so much more: creating more chart types - from pie charts to network graphs, exporting your visualizations, embedding your finished product into an HTML document, integrating widgets and UI elements, etc.  
+
+Do I hear part two, anyone? 
+
+As I've referenced throughout the tutorial, the official [Bokeh User Guide](https://bokeh.pydata.org/en/latest/docs/user_guide.html) is an excellent place to dig into these more advanced topics. Also I'd recommend checking out [Bokeh's Gallery](https://bokeh.pydata.org/en/latest/docs/gallery.html) for tons of examples and inspiration. 
