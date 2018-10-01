@@ -614,7 +614,181 @@ So now that you understand how to access, draw, and organize your data it is tim
 
 ## Adding Interaction
 
-### 
+Even Bokeh describes itself as an [_interactive visualization library_](https://bokeh.pydata.org/en/latest/docs/user_guide/quickstart.html#userguide-quickstart). In this section, we'll touch on the following elements that will illustrate what that really means:
+
+* The toolbar 
+* Selection
+* Hover actions
+* Linking 
+* Interactive legends 
+
+
+
+**The Toolbar**
+
+As you can see, the first item on that list has been there the entire time. If you've been following along you may have already played with it. The default Bokeh ```figure()``` comes with a toolbar out of the box.
+
+![Thimage-20181001053517435](./assets/default_toolbar.png)
+
+The default toolbar, as seen above, comes with the following tools (from left to right): **Pan**, **Box Zoom**, **Wheel Zoom**, **Save**, **Reset**, a link to [**Bokeh's user guide for Configuring Plot Tools**](https://bokeh.pydata.org/en/latest/docs/user_guide/tools.html#built-in-tools), and a link to the [**Bokeh homepage**](https://bokeh.pydata.org/en/latest/). 
+
+The toolbar can be removed by passing ```toolbar_location=None``` when instantiating a figure object, or relocated by passing any of ```'above'```, ``` 'below'```, ```'left'```, or ``` 'right'```. 
+
+Additionally, the toolbar can be configured to include any combination of tools you desire. By my count, Bokeh offers 14 specific tools across five categories: Pan/Drag, Click/Tap, Scroll/Pinch, Actions, and Inspectors. To geek out on tools right now, check out [Specifying Tools](http://bokeh.pydata.org/en/0.11.1/docs/user_guide/tools.html#specifying-tools), otherwise I'll illustrate various tools for the various interactions covered herein. 
+
+
+
+**Selection**
+
+Implementing selection behavior is as easy as adding a few select keywords when declaring your glyphs. To show you, I'll create a scatter plot that relates a player's total number of three-point shot attempts to the percentage made (for players with at least 100 three-point shot attempts). I've aggregated this data in a Pandas DataFrame named ```threeTakers```:
+
+```
+threeTakers.sample(5)
+```
+
+![image-20181001060627353](./assets/threeTakers_preview.png)
+
+I want to be able to select a groups of players in the distribution, and in doing so mute the color of the glyph representing the non-selected players:
+
+```python
+# Bokeh Libraries
+from bokeh.plotting import figure, show
+from bokeh.io import output_notebook
+from bokeh.models import ColumnDataSource
+from bokeh.models import NumeralTickFormatter
+
+# Output inline in the notebook
+output_notebook()
+
+# Store the data in a ColumnDataSource
+source = ColumnDataSource(threeTakers)
+
+# Specify the selection tools to be made available
+selectTools = ['box_select', 'lasso_select', 'poly_select', 'tap', 'reset']
+
+# Create the figure
+fig = figure(
+    plot_height=400,
+    plot_width=600,
+    x_axis_label='Three-Point Shots Attempted',
+    y_axis_label='Percentage Made',
+    title='3PT Shots Attempted vs. Percentage Made (min. 100 3PA), 2017-18',
+    toolbar_location='below',
+    tools=selectTools)
+
+# Format the y-axis tick labels as percenages
+fig.yaxis[0].formatter = NumeralTickFormatter(format="00.0%")
+
+# Add square representing each player
+fig.square(
+    x='play3PA', 
+    y='pct3PM', 
+    source=source,
+    color='#6BADDF',
+    selection_color='#021A46',
+    nonselection_color='#B6B7BB',
+    nonselection_alpha=0.3)
+
+# Visualize
+show(fig)
+```
+
+First, I specified the specific selection tools I wanted to make available - ```'box_select'```, ```'lasso_select'```, ```'poly_select'```, and ```'tap'``` 
+
+(plus a Reset button) in a list called ```selectTools```. I instantiated a figure placing the toolbar ```'below'``` the plot and configured with my specified tools. 
+
+
+Each player is initially represented by a light blue square glyph. I specified two things I wanted to happen if a player or group of players is selected: 
+
+* Turn the selected player(s) to navy blue
+* Turn the all non-selected players to a light gray color with 0.3 opacity
+
+That's it! Just a few quick additions and here's how it turned out:
+
+![selection_example](./assets/selection_example.gif)
+
+For even more information about what you can do upon selection, check out [Selected and Unselected Glyphs](https://bokeh.pydata.org/en/latest/docs/user_guide/styling.html#selected-and-unselected-glyphs). 
+
+
+
+**Hover Actions**
+
+So I've implemented the ability to select specific players that seem of interest in my scatter plot, but how can I quickly determine who the individual players in my selection are? One option is to use Bokeh's ```HoverTool()``` to show a tooltip when my cursor is hovering over a glyph. All I need to do is append the following to the code snippet above: 
+
+```python
+# Bokeh Library
+from bokeh.models HoverTool
+
+# Format the tooltip
+tooltips = [
+            ('Player','@name'),
+            ('3PM', '@play3PM'),
+            ('3PA', '@play3PA'),
+            ('3P%','@pct3PM{00.0%}'),
+           ]
+
+# Add the HoverTool to the figure
+fig.add_tools(HoverTool(tooltips=tooltips))
+
+# Visualize
+show(fig)
+```
+
+The ```HoverTool()``` is slightly different than the selection tools you saw above in that it has properties - in this case, ```tooltips```. 
+
+I first created a formatted tooltip by creating a list of tuples containing a description and reference to my ```ColumnDataSource```. This list was passed as input to the ```HoverTool()``` and then I simply added my new ```HoverTool()``` to the figure using ```figure()```'s ```add_tools()``` method. Here's what happened:
+
+![hover_tooltip_example](./assets/hover_tooltip_example.gif)
+
+The first thing you may notice is the addition of the Hover button to the toolbar, which can be toggled on and off. 
+
+Otherwise, I tried to point out that hover is independent of selection. I am able to move my cursor over any glyph and see its corresponding tooltip - regardless of if it is selected or not. 
+
+I like that addition, but I feel like I also want to further emphasize the players I am hovering over. Bokeh makes that impossible with hover inspections. Here is a slightly modified version of the code snippet that added the tooltip:
+
+```python
+# Bokeh Library
+from bokeh.models HoverTool
+
+# Format the tooltip
+tooltips = [
+            ('Player','@name'),
+            ('3PM', '@play3PM'),
+            ('3PA', '@play3PA'),
+            ('3P%','@pct3PM{00.0%}'),
+           ]
+
+# Configure a renderer to be used upon hover
+hoverGlyph = \
+    fig.circle(
+        x='play3PA', 
+        y='pct3PM', 
+        source=source,
+        size=15,
+        alpha=0,
+        hover_fill_color='#3E6085',
+        hover_alpha=0.5)
+
+# Add the HoverTool to the figure
+fig.add_tools(HoverTool(tooltips=tooltips, renderers=[hoverGlyph]))
+
+# Visualize
+show(fig)
+```
+
+I have created a completely new glyph, this time circles instead of squares, and assigned it to ```hoverGlyph```. Note that I am setting the initial opacity to 0 so that this glyph only appears on hover. That is set by setting ```hover_alpha``` to 0.5 along with the ```hover_fill_color```. Now when I hover over various glyphs I will see a small blue circle appear over the original square:
+
+![hover_inspection](./assets/hover_inspection.gif)
+
+To further explore the capabilities of the ```HoverTool()```, check out [HoverTool](https://bokeh.pydata.org/en/latest/docs/user_guide/tools.html#hovertool) and [Hover Inspections](https://bokeh.pydata.org/en/latest/docs/user_guide/styling.html#hover-inspections).
+
+
+
+
+
+
+
+
 
 
 
